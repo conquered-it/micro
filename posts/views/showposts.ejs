@@ -1,0 +1,14 @@
+<%posts.forEach(function(x){%>
+	<h1><%=x.title%></h1>
+	<p><%=x.title%></p>
+	<p><%=x.body%></p>
+	<p><%=x._id%></p> <br><br>
+<%});%>
+
+<br><br><br>
+
+<form action='/posts' method='POST'>
+	<input type='text' name='post[title]' placeholder='title'>
+	<input type='text' name='post[body]' placeholder='body'>
+	<input type='submit'>
+</form>

@@ -1,0 +1,9 @@
+<%comm.forEach(function(x){%>
+		<p><%=x.body%></p>
+<%})%>
+
+<p></p>
+<form action='/posts/<%=id%>/comments' method='POST'>
+	<input type='text' name='text' placeholder='text'>
+	<input type='submit'>
+</form>

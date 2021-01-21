@@ -1,0 +1,27 @@
+<form action='http://localhost:4000/posts' method='POST'>
+	<input type='text' name='post[title]' placeholder='title'>
+	<input type='text' name='post[body]' placeholder='body'>
+	<input type='submit'>
+</form>
+<br><br>
+
+<%posts.forEach(function(x){%>
+	<h1><%=x.title%></h1>
+    <p><%=x.body%></p>
+    <br>
+    <p><strong>Comments</strong></p>
+    <%x.comments.forEach(function(y){%>
+        <%if(y.status==='approved'){%>
+            <p><%=y.text%></p>
+        <%} else if(y.status==='rejected'){%>
+            <p>Comment contains bad words</p>
+        <%} else{%>
+            <p>Comment Awaiting Approval</p>
+        <%}%>
+    <%})%>
+    <form action='http://localhost:4001/posts/<%=x.id%>/comments' method='POST'>
+        <input type='text' name='text' placeholder='text'>
+        <input type='submit'>
+    </form>
+	<p><%=x._id%></p> <br><br>
+<%})%>
