@@ -30,7 +30,7 @@ app.get('/posts',function(req,res){
 })
 
 app.post('/posts',function(req,res){
-	posts.create(req.body._doc.post,async function(err,ret){
+	posts.create(req.body.post,async function(err,ret){
 		if(err) console.log('err');
 		else{
 			axios.post('http://localhost:4005/events',
@@ -39,7 +39,9 @@ app.post('/posts',function(req,res){
 				title: ret.title,
 				body: ret.body,
 				id: ret._id.toString()
-			}));
+			})).catch(function(err){
+				console.log('errorfound');
+			});
 			res.redirect('http://localhost:3000/');
 		}
 	});

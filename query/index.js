@@ -52,31 +52,8 @@ app.post('/events',function(req,res){
             ret.save();
         })
     }
-    if(temp.type === 'updatedcomment'){
-        var postid = temp.postid.toString() , id = temp.id,
-        body = temp.body , status = temp.status;
-        posts.findOne({id:postid},function(err,ret){
-            ret.comments.forEach(function(x){
-                if(x.id === id) x.status = status;
-            })
-            ret.save();
-        })
-    }
     res.send({});
 });
-
-// if(temp.type === 'updatedcomment'){
-//     var postid = temp.postid.toString() , id = temp.id,
-//     body = temp.body , status = temp.status;
-//     posts.findOne({id:postid},function(err,ret){
-//         ret.comments.findByIdAndUpdate(id, {status:status}, function(err,ret2){
-//             if(err) console.log(err);
-//             else ret.save();
-//         })
-//         // ret.save();
-//     })
-// }
-// res.send({});
 
 app.listen(port,function(){
     console.log('ok');

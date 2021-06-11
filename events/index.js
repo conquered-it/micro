@@ -29,9 +29,7 @@ var createpost = mongoose.model("createpost",createpostSchema);
 
 var data={
     'newpost':['http://localhost:4002/events'],
-    'newcomment':['http://localhost:4002/events','http://localhost:4003/events'],
-    'updatedcomment':['http://localhost:4002/events'],
-    'moderatedcomment':['http://localhost:4001/events'],
+    'newcomment':['http://localhost:4002/events'],
     'createpost':['http://localhost:4000/posts']
 };
 

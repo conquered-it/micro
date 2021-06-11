@@ -11,13 +11,7 @@
     <br>
     <p><strong>Comments</strong></p>
     <%x.comments.forEach(function(y){%>
-        <%if(y.status==='approved'){%>
-            <p><%=y.text%></p>
-        <%} else if(y.status==='rejected'){%>
-            <p>Comment contains bad words</p>
-        <%} else{%>
-            <p>Comment Awaiting Approval</p>
-        <%}%>
+        <p><%=y.text%></p>
     <%})%>
     <form action='http://localhost:4001/posts/<%=x.id%>/comments' method='POST'>
         <input type='text' name='text' placeholder='text'>
