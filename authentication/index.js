@@ -1,22 +1,30 @@
 var axios = require("axios");
 var express = require("express"),
 app = express(),
-bodyParser = require("body-parser"),
+json = require("body-parser"),
 mongoose = require("mongoose"),
 cors = require('cors'),
 passport = require("passport"),
 passportLocal = require("passport-local"),
 passportLocalMongoose = require("passport-local-mongoose"),
 qs = require('qs'),
+cookieSession = require('cookie-session'),
+jwt = require('jsonwebtoken'),
 port = process.env.PORT || 3010;
 mongoose.set('useNewUrlParser', true);
 mongoose.connect("mongodb://localhost/posts",{ useUnifiedTopology: true });
-app.use(bodyParser.urlencoded({extended:true}));
 app.set("view engine","ejs");
+app.set('trust proxy',true);
 app.use(express.static(__dirname + '/public'))
 app.use(express.static('views'));
 app.use(cors()); 
-
+app.use(json());
+app.use(
+    cookieSession({
+        signed:false,
+        secure:true
+    })
+);
 app.use(require("express-session")({
 	secret: "LOL",
 	resave: false,
@@ -44,7 +52,14 @@ app.use(function(req,res,next){
 })
 
 app.get('/',IsLoggedIn,function(req,res){
+    console.log(req.user);
     res.send("ok");
+})
+
+app.get('/authenticate',function(req,res){
+    console.log(req.user);
+    if(req.isAuthenticated()) res.send(true);
+    else res.send(false);
 })
 
 app.get('/register',function(req,res){
@@ -55,17 +70,26 @@ app.post('/register',function(req,res){
     User.register(new User({username:req.body.username}),req.body.password,function(err,user){
         if(err) res.render(register);
         passport.authenticate("local")(req,res,function(){
-			res.redirect('/');
+			var userJwt = jwt.sign({
+                username: user.username
+            },"LOL");
+            console.log(userJwt);
+            req.session={
+                jwt:userJwt
+            };
+            res.redirect('/');
+            console.log(req.session);
 		})
     })
 })
 
 
 app.get('/login',function(req,res){
+    console.log(req.session);
     res.render("login");
 })
 
-app.post("/login",IsUser,passport.authenticate("local",{
+app.post("/login",passport.authenticate("local",{
 	successRedirect:"/",
 	failureRedirect:"/login"
 }),function(req,res){});
@@ -75,16 +99,9 @@ app.get("/logout",function(req,res){
 	res.redirect("/login");
 })
 
-function IsUser(req,res,next){
-    User.findOne({username:req.body.username},function(err,ret){
-        if(ret) return next();
-        res.redirect('/login');
-    })
-}
-
 function IsLoggedIn(req,res,next){
 	if(req.isAuthenticated()) return next();
-	res.redirect("/login");
+	else res.redirect("/login");
 }
 
 

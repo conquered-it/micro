@@ -91,6 +91,18 @@ app.post('/check',async function(req,res){
     }
 })
 
+async function isLoggedIn(req,res,next){
+    var temp = await axios.get('http://localhost:3010/authenticate').catch(function(err){
+       res.redirect("http://localhost:3000");
+    });
+    if(temp === true){
+        return next();
+    }
+    else{
+        res.redirect("http://localhost:3010/login");
+    }
+}
+
 app.listen(port,function(){
     console.log('ok_events');
 })
