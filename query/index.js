@@ -19,8 +19,7 @@ var postsSchema = new mongoose.Schema({
     comments:[
         {
             id:String,
-            text:String,
-            status:String
+            body:String
         }
     ]
 });
@@ -45,11 +44,12 @@ app.post('/events',function(req,res){
         });
     }
     if(temp.type === 'newcomment'){
-        var postid = temp.postid.toString() , id = temp.id , 
+        var postid = temp.postid , id = temp.id , 
         body = temp.body;
         posts.findOne({id:postid},function(err,ret){
-            ret.comments.push({id:id,text:body,status:temp.status});
+            ret.comments.push({id:id,body:body});
             ret.save();
+
         })
     }
     res.send({});

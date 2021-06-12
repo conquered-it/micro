@@ -27,30 +27,31 @@ var createpostSchema = new mongoose.Schema({
 
 var createpost = mongoose.model("createpost",createpostSchema);
 
-// var createcommentSchema = new mongoose.Schema({
-//     comment:{
-//         body:String,
-//         postid:String
-//     }
-// });
+var createcommentSchema = new mongoose.Schema({
+    comment:{
+        body:String,
+        postid:String
+    }
+});
 
-// var createcomment = mongoose.model("createcomment",createcommentSchema);
+var createcomment = mongoose.model("createcomment",createcommentSchema);
 
 
 var data={
     'newpost':['http://localhost:4002/events'],
     'newcomment':['http://localhost:4002/events'],
-    'createpost':['http://localhost:4000/posts']
+    'createpost':['http://localhost:4000/posts'],
+    'createcomment':['http://localhost:4001/comments']
 };
 
 var store={
     'createpost':createpost,
-    // 'createcomment':createcomment
+    'createcomment':createcomment
 }
 
 var update={
     'createpost':'http://localhost:4000/posts',
-    // 'createcomment':'http://localhost:4001/posts',
+    'createcomment':'http://localhost:4001/comments',
 }
 
 app.post('/events',function(req,res){
@@ -60,9 +61,16 @@ app.post('/events',function(req,res){
             await axios.post(x,qs.stringify(event));
         }catch{
             console.log("This service is currently not available, your changes will be soon updated");
-            store[event.type].create({post:event.post},function(err,ret){
-                if(err) console.log('err');
-            });
+            if(event.type=='newpost'){
+                store[event.type].create({post:event.post},function(err,ret){
+                    if(err) console.log('err');
+                });
+            }
+            else{
+                store[event.type].create({comment:event.comment},function(err,ret){
+                    if(err) console.log('err');
+                });
+            }
         };
     })
     res.redirect('http://localhost:3000');
