@@ -27,6 +27,16 @@ var createpostSchema = new mongoose.Schema({
 
 var createpost = mongoose.model("createpost",createpostSchema);
 
+// var createcommentSchema = new mongoose.Schema({
+//     comment:{
+//         body:String,
+//         postid:String
+//     }
+// });
+
+// var createcomment = mongoose.model("createcomment",createcommentSchema);
+
+
 var data={
     'newpost':['http://localhost:4002/events'],
     'newcomment':['http://localhost:4002/events'],
@@ -34,18 +44,20 @@ var data={
 };
 
 var store={
-    'createpost':createpost
+    'createpost':createpost,
+    // 'createcomment':createcomment
 }
 
 var update={
     'createpost':'http://localhost:4000/posts',
+    // 'createcomment':'http://localhost:4001/posts',
 }
 
 app.post('/events',function(req,res){
     var event = req.body;
     data[event.type].forEach(async function(x){
         try{
-            await axios.post(x,qs.stringify(event))
+            await axios.post(x,qs.stringify(event));
         }catch{
             console.log("This service is currently not available, your changes will be soon updated");
             store[event.type].create({post:event.post},function(err,ret){

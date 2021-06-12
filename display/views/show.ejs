@@ -1,6 +1,7 @@
-<form action='http://localhost:4000/posts' method='POST'>
+<form action='http://localhost:4005/events' method='POST'>
 	<input type='text' name='post[title]' placeholder='title'>
 	<input type='text' name='post[body]' placeholder='body'>
+    <input type="text" name='type' value='createpost' style='display:none'>
 	<input type='submit'>
 </form>
 <br><br>
@@ -14,7 +15,9 @@
         <p><%=y.text%></p>
     <%})%>
     <form action='http://localhost:4001/posts/<%=x.id%>/comments' method='POST'>
-        <input type='text' name='text' placeholder='text'>
+        <input type='text' name='body' placeholder='text'>
+        <!-- <input type='text' name='postid' value='<%=x.id%>' style='display:none'> -->
+        <!-- <input type='text' name='type' value='createcomment' style='display:none'> -->
         <input type='submit'>
     </form>
 	<p><%=x._id%></p> <br><br>

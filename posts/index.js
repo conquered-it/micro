@@ -30,7 +30,9 @@ app.get('/posts',function(req,res){
 })
 
 app.post('/posts',function(req,res){
-	posts.create(req.body.post,async function(err,ret){
+	var temp=req.body.post;
+	if(!temp) temp=req.body._doc.post;
+	posts.create(temp,async function(err,ret){
 		if(err) console.log('err');
 		else{
 			axios.post('http://localhost:4005/events',
